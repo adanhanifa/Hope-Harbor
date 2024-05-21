@@ -90,12 +90,21 @@ fun LoginScreen(navController: NavController){
             Spacer(modifier = Modifier.height(100.dp))
         }
 
-        Text(text = "LOG IN HERE",
-            onTextLayout = {},
-            color = Color.Black,
-            fontFamily = FontFamily.SansSerif,
-            fontWeight = FontWeight.Bold,
-            fontSize = 30.sp)
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = "LOG IN HERE",
+                onTextLayout = {},
+                color = Color.Black,
+                fontFamily = FontFamily.SansSerif,
+                fontSize = 30.sp,
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.ExtraBold,
+            )
+        }
+
         Spacer(modifier = Modifier.height(20.dp))
 
         OutlinedTextField(
