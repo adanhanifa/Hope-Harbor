@@ -1,6 +1,7 @@
 package com.example.hopeharbor.ui.theme.screens.login
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -16,12 +17,19 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -35,6 +43,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -46,16 +55,19 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.hopeharbor.R
+import com.example.hopeharbor.ui.theme.data.AuthViewModel
 import com.example.hopeharbor.ui.theme.navigation.ROUTE_ABOUT
 import com.example.hopeharbor.ui.theme.navigation.ROUTE_HOME
 import com.example.hopeharbor.ui.theme.navigation.ROUTE_LOGIN
 import com.example.hopeharbor.ui.theme.navigation.ROUTE_REGISTER
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(navController: NavController){
-    var email by remember{ mutableStateOf(TextFieldValue("")) }
+    var email by remember { mutableStateOf(TextFieldValue("")) }
     var pass by remember { mutableStateOf(TextFieldValue("")) }
-    var context= LocalContext.current
+    val context= LocalContext.current
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -78,26 +90,19 @@ fun LoginScreen(navController: NavController){
             Spacer(modifier = Modifier.height(100.dp))
         }
 
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = "LOG IN HERE",
-                color = Color.Black,
-                fontFamily = FontFamily.SansSerif,
-                fontSize = 30.sp,
-                textAlign = TextAlign.Center,
-                fontWeight = FontWeight.ExtraBold,
-            )
-        }
-
+        Text(text = "LOG IN HERE",
+            onTextLayout = {},
+            color = Color.Black,
+            fontFamily = FontFamily.SansSerif,
+            fontWeight = FontWeight.Bold,
+            fontSize = 30.sp)
         Spacer(modifier = Modifier.height(20.dp))
 
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text("Enter your email") },
+            label = { Text("Enter your email",
+                onTextLayout = {},) },
             //modifier = Modifier.fillMaxWidth()
             leadingIcon = {
                 androidx.compose.material3.Icon(
@@ -114,7 +119,8 @@ fun LoginScreen(navController: NavController){
         OutlinedTextField(
             value = pass,
             onValueChange = { pass = it },
-            label = { Text("Enter your password") },
+            label = { Text("Enter your password",
+                onTextLayout = {},) },
             visualTransformation = PasswordVisualTransformation(),
             // modifier = Modifier.fillMaxWidth()
             leadingIcon = {
@@ -127,6 +133,8 @@ fun LoginScreen(navController: NavController){
                 .fillMaxWidth()
                 .padding(8.dp)
         )
+
+
         Spacer(modifier = Modifier.height(16.dp))
 
         Box(
@@ -134,8 +142,11 @@ fun LoginScreen(navController: NavController){
             contentAlignment = Alignment.Center
         ) {
             Button(
-                onClick = { navController.navigate(ROUTE_HOME) },
-                modifier = Modifier.width(150.dp), // Adjust the width as needed
+                onClick = {
+                    val mylogin= AuthViewModel(navController, context )
+                    mylogin.login(email.text.trim(),pass.text.trim())
+                    navController.navigate(ROUTE_HOME) },
+                modifier = Modifier.width(150.dp),
                 colors = ButtonDefaults.buttonColors(Color.Black)
             ) {
                 Text(
@@ -146,6 +157,7 @@ fun LoginScreen(navController: NavController){
         }
 
         Spacer(modifier = Modifier.height(50.dp))
+
 
         Text(
             modifier = Modifier
@@ -161,11 +173,12 @@ fun LoginScreen(navController: NavController){
         )
 
         Spacer(modifier = Modifier.height(20.dp))
+
+
     }
 
 }
-
-@Preview(showBackground = true, showSystemUi = true)
+@Preview(showSystemUi = true, showBackground = true)
 @Composable
 fun LoginScreenPreview() {
     LoginScreen(rememberNavController())
